@@ -12,10 +12,13 @@ ROOT_NAME = "assin-pt{0}-"
 # FILE_FOR_TEST = 'dataset/xml/read_test.xml'
 FILES_LOCATION = '../dataset/xml/{0}/{1}'
 
-FOLDERS = namedtuple(
-    pt=FILES_LOCATION.format("PT", ROOT_NAME.format("pt")),
-    br=FILES_LOCATION.format("BR", ROOT_NAME.format("br"))
-    )
+FOLDERS = namedtuple('FOLDERS', ['eu', 'br', 'eubr'])
+
+FOLDERS = FOLDERS(
+    eu=FILES_LOCATION.format("EU", ROOT_NAME.format("pt")),
+    br=FILES_LOCATION.format("BR", ROOT_NAME.format("br")),
+    eubr = FILES_LOCATION.format("EUBR", ROOT_NAME.format("eubr"))
+)
 
 
 def parse_xml(file_path):
