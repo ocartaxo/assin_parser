@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 
+from typing import Optional
 from xml.etree import ElementTree as ET
 from argparse import ArgumentParser
 from collections import namedtuple
@@ -60,31 +61,33 @@ def save_df(df: pd.DataFrame, file_path: str):
         df.to_csv(f, index=False)
 
 
-def build_dataset(args):
-    if args.pt:
-        pt_dataset = parse_xml(FOLDERS.pt)
-        br_dataset = parse_xml(FOLDERS.br)
-        
-        corpus = br_dataset + pt_dataset
-        corpus = shuffle(np.array(corpus))
-        corpus = create_df(corpus)
-        
-        return corpus
+def build_dataset(args: Optional[ArgumentParser]=None):
+    brpt_dataset = parse_xml(FOLDERS.br) 
+  
+    if args.j:
+        eupt_dataset = parse_xml(FOLDERS.eu)      
+        corpus = brpt_dataset + eupt_dataset
 
 
+    corpus = shuffle(np.array(corpus))
+    corpus = create_df(corpus)
 
-    return create_df(parse_xml(FOLDERS.br))
+    if args.s:
+        return save_df(corpus, FOLDERS)
+
+    return corpus
 
 
 def main(args):
     build_dataset(args)
 
     print("FIM.")
-
+    
 if __name__ == "__main__":
     
     parser = ArgumentParser()
     parser.add_argument("-j", "--join", help="join european portuguese dataset into brazilian dataset")
+    parser.add_argument("-s", "--save", help="salva o dataset em um diretório")
     args = parser.parse_args()
 
 
