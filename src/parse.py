@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 from collections import namedtuple
 from sklearn.utils import shuffle
 
-FILES_LOCATION = 'dataset/xml'
+FILES_LOCATION = '../dataset/xml'
 
 MODES = namedtuple('MODER', ['r', 'w'])
 
