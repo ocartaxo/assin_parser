@@ -10,19 +10,14 @@ from argparse import ArgumentParser
 from collections import namedtuple
 from sklearn.utils import shuffle
 
-FILES_LOCATION = '../dataset/xml'
-
 MODES = namedtuple('MODER', ['r', 'w'])
 
 MODES = MODES(r=stat.S_IREAD, w=stat.S_IWRITE)
 
-logger = logging.getLogger()
+#logger = logging.getLogger()
 
 def parse_xml(file_path):
 
-
-    file_path = '/'.join([FILES_LOCATION, file_path])
-    logger.info("Parsing xml file")
     tree = ET.parse(file_path)
     root = tree.getroot()
     info_pares_sentencas = list()
@@ -42,37 +37,35 @@ def create_df(L: list):
     df = pd.DataFrame(L)
     df = df.rename(columns={"entailment":"Relacao", "similarity": "Similaridade"})
     #df["Implicação"] = df.Relação.map({"Entailment": "Sim", "None": "Não"})
-
-    logging.info("Dataframe created.")
-    
+   
     return df
 
 
 def save_as_csv(df: pd.DataFrame, file_path: str):
-    logging.info(f"Saving dataframe in {file_path}")
     file_path = file_path.replace('xml', 'csv')
+    dir_to_save, _ = file_path.rsplit('/', 1)
 
-    if 'csv' not in os.listdir('dataset'):
-      #  os.chmod(r'dataset/csv', mode=MODES.w)
-        os.mkdir(r'dataset/csv')
+    if not os.path.isdir(dir_to_save):
+        os.mkdir(dir_to_save)
 
     with open(file_path, mode='w+', encoding='utf-8', newline="") as f:
         df.to_csv(f, index=False)
 
-    # logging.info("Dataframe saved.")
+def build_dataset(path):
 
-def build_dataset(args: Optional[ArgumentParser]=None):
+    '''
+      path (str): path do xml files
+    '''
 
-    files_name = os.listdir(FILES_LOCATION)
+    files_name = os.listdir(path)
     for f in files_name:
-        parsed_file = parse_xml(f)
+        path_file = os.path.join(path, f)
+        parsed_file = parse_xml(path_file)
         df = create_df(parsed_file)
-        save_as_csv(df, os.path.join(FILES_LOCATION, f))
+        save_as_csv(df, path_file)
 
 def main(args):
     build_dataset(args)
-
-    logger.info("FIM.")
 
 if __name__ == "__main__":
     
