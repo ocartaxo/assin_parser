@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import os
 import logging
 import stat
@@ -8,11 +7,6 @@ from typing import Optional
 from xml.etree import ElementTree as ET
 from argparse import ArgumentParser
 from collections import namedtuple
-from sklearn.utils import shuffle
-
-MODES = namedtuple('MODER', ['r', 'w'])
-
-MODES = MODES(r=stat.S_IREAD, w=stat.S_IWRITE)
 
 #logger = logging.getLogger()
 
